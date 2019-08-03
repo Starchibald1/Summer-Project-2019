@@ -39,6 +39,40 @@ def process_data(data_list):
     return id_list, attribute_list, truth_list
 
 
+def softmax(z):
+    z_exp = np.exp(z)
+    z_sum = np.sum(np.exp(z))
+    return z_exp / z_sum
+
+    
+def crossEntropy(y_pred, y):
+    """
+    y_pred = predicted values
+    y = truth values
+    """
+    
+    size_y = np.shape(y)[0]
+    y_pred = np.reshape(y_pred, (1, size_y))
+    y = np.reshape(y, (size_y, 1))
+    return -(1/size_y)*(np.dot(np.log(y_pred), y) + np.dot((1 - y), np.log(1 - y_pred)))
+
+
+def gradError():
+    
+    return
+
+
+def prediction(data, labels):
+    W = np.random.random(size=(np.shape(attribute_list)[1], 1))
+    b = np.random.random()
+    
+    y = softmax(np.dot(data, W) + b)
+    error = crossEntropy(y, labels)    
+    
+    
+    
+    return
+
 # Opens the file with the data and stores all the data as a single long string
 # in 'data' variable
 with open('wdbc_txt.txt', 'r') as file:
@@ -49,11 +83,15 @@ data_list = data.split('\n')[:-1]
 # output
 id_list, attribute_list, truth_list = process_data(data_list)
 
+np.random.seed(100)
+
 # Printing the output in three different ways, using np.shape to get the 
 # dimensions of each list structure
 print('ID_list dimensions: {0}'.format(np.shape(id_list)))
 print('Attribute List: ', np.shape(attribute_list))
 print('Truth List: ' + str(np.shape(truth_list)))
+
+prediction()
 
 
 
