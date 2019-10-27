@@ -63,8 +63,16 @@ def create_network(attribute_list, truth_list):
     
     loss_metrics = model.evaluate(x_test, y_test, batch_size=128)
     classes = model.predict(x_test, batch_size=128)
+    acc = accuracy(classes, y_test)
     
-    return
+    return loss_metrics, classes, acc
+
+
+def accuracy(classes, y_test):
+    diff = y_test - classes
+    num_wrong = np.sum(1*np.greater_equal(diff, 0.5)) # converts boolean array to int
+    
+    return 1 - (num_wrong / len(y_test))
 
 
 '''
@@ -118,6 +126,10 @@ np.random.seed(100)
 print('ID_list dimensions: {0}'.format(np.shape(id_list)))
 print('Attribute List: ', np.shape(attribute_list))
 print('Truth List: ' + str(np.shape(truth_list)))
+
+loss_metrics, classes, acc = create_network(attribute_list, truth_list)
+
+print('Accuracy: ', acc)
 
 # prediction()
 
