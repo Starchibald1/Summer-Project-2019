@@ -1,4 +1,7 @@
 import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense
+from sklearn.model_selection import train_test_split
 
 def process_data(data_list):
     '''
@@ -35,10 +38,36 @@ def process_data(data_list):
     id_list = np.array(id_list).astype(np.int)
     attribute_list = np.array(attribute_list).astype(np.float32)
     truth_list = np.array(truth_list)
-    
+    truth_list = one_hot(truth_list)
     return id_list, attribute_list, truth_list
 
 
+def one_hot(list_items):
+    for item in truth_list:
+        if item == 'M':
+            item = 0
+        elif item == 'B':
+            item = 1
+    return
+
+
+def create_network(attribute_list, truth_list):
+    x_train, x_test, y_train, y_test = train_test_split(attribute_list, truth_list, test_size=0.2)
+    
+    model = Sequential()
+    model.add(Dense(units=64, activation='relu', input_dim=(1, np.shape(x_train)[1])))
+    model.add(Dense(units=32, activation='relu'))
+    model.add(Dense(units=2, activation='softmax'))
+    model.compile(loss='categorical_crossentropy', optimizer='sgd', metrics=['accuracy'])
+    model.fit(x_train, y_train, batch_size=32, epochs=5)
+    
+    loss_metrics = model.evaluate(x_test, y_test, batch_size=128)
+    classes = model.predict(x_test, batch_size=128)
+    
+    return
+
+
+'''
 def softmax(z):
     z_exp = np.exp(z)
     z_sum = np.sum(np.exp(z))
@@ -69,9 +98,8 @@ def prediction(data, labels):
     y = softmax(np.dot(data, W) + b)
     error = crossEntropy(y, labels)    
     
-    
-    
     return
+'''
 
 # Opens the file with the data and stores all the data as a single long string
 # in 'data' variable
@@ -91,7 +119,10 @@ print('ID_list dimensions: {0}'.format(np.shape(id_list)))
 print('Attribute List: ', np.shape(attribute_list))
 print('Truth List: ' + str(np.shape(truth_list)))
 
-prediction()
+# prediction()
+
+
+
 
 
 
